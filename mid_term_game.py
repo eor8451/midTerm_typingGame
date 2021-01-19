@@ -31,8 +31,14 @@ import time    #'''게임 시간 기록에 필요한 패키지'''
 def click_exit():
     pass
 
-def enter(event):
-   x = input_word.get()
+def click_hint():
+    hint_btn["text"] = q
+
+def click_word():
+    global x
+    x= input_word.get()
+    print(x)
+    input_word.delete(0,"end")
 
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
@@ -50,7 +56,7 @@ words = []                                   # 영어 단어 리스트(1000개 �
 
 n = 1                                        # 게임 시도 횟수
 cor_cnt = 0                                  # 정답 개수
-
+x=""
 try:
     word_f=open('./resource/word.txt', 'r') # 문제 txt 파일 로드
 except IOError:
@@ -66,8 +72,6 @@ if words==[]:                                #파일이 없을때 프로그램 �
 #print(words)                                 # 단어 리스트 확인
 
 
-
-
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
@@ -80,6 +84,7 @@ root = tkinter.Tk()
 root.title("영어 단어 맞추기")
 root.resizable(False,False)
 
+
 canvas = tkinter.Canvas(root, width=800, height=600)
 canvas.pack()
 
@@ -88,24 +93,31 @@ book = tkinter.PhotoImage(file="block_word1.png")
 canvas.create_image(400,300,image=book)
 
 
+label = tkinter.Label(root, text="영어 단어",font=("System",50) )
+label.place(x=300,y=200)
 
-label = tkinter.Label(root, text="영어 단어",font=("System",80) )
-label.place(x=120,y=200)
 
-input_word = tkinter.Entry(root, font=("System",25),justify='center')
+
+input_word = tkinter.Entry(root, font=("System",25))
 input_word.place(x=200, y=480)
- 
+
+#정답제출
+word_btn = tkinter.Button(root, text="제출",font=("System",15),command=click_word)
+word_btn.pack() 
 
 while n <= 5:                                # 5회 반복
                                
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
+    
+    #힌트버튼생성
+    hint_btn=tkinter.Button(root,text="힌트 클릭",font=("System",15),justify='center',command=click_hint)
+    hint_btn.place(x=350,y=400)
 
     #print("{}번 문제>>".format(n),q)
     label["text"]= q       # 문제 출력
-    
-    x= input("Dd")   # 타이핑 입력
-   
+
+    x= input("타이핑")
 
     if str(q).strip() == str(x).strip():     # 입력 확인(공백제거)
         ########### 정답 소리 재생
@@ -144,6 +156,7 @@ if cor_cnt >= 3:                             # 3개 이상 합격
 else:
     print("불합격")
 
+
 ######### 결과 기록 DB 삽입
     '''data삽입 전에 먼저 기록테이블 구조 열어보기'''
 #cursor.execute(
@@ -160,4 +173,7 @@ else:
 #conn.close()
 
 # 수행 시간 출력
+
+root.mainloop()
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
+
