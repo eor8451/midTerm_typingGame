@@ -59,7 +59,9 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
-def randword(word):                            #! 단어 섞어주는 함수
+
+# 단어 섞어주는 함수
+def randword(word):                           
     word_lis=list(word)
     print(word)
     random.shuffle(word_lis)
@@ -76,7 +78,7 @@ while n <= 5:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    word_ch=''.join(randword(q))                     #! 추가 - 함수호출
+    word_ch=''.join(randword(q))                     #! 함수호출
 
     print("{}번 문제>>".format(n),word_ch)         #! 문제 출력
     
@@ -133,6 +135,24 @@ cursor.execute(
 '''게임 실행해서 db기록되는지 확인'''
 ######### 접속 해제
 conn.close()
+
+#최고점
+try:
+    f=open('./resource/bestScore.txt', 'r')
+except IOError:
+    print("파일이 없습니다!! 점수를 읽을 수 없습니다!!")
+
+score=int((f.read()).strip())
+f.close()
+
+if cor_cnt>score:
+    print("최고점 :",cor_cnt)
+    score_best=open('./resource/bestScore.txt', 'w')
+    score_best.write(str(cor_cnt))
+    score_best.close()
+else:
+    print("최고점 :",score)
+
 
 # 수행 시간 출력
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
