@@ -1,44 +1,50 @@
-# 업그레이드 타이핑 게임 제작
-# 사운드 적용 및 DB 연동
-'''파일 목록에서 ctrl+c+v하면 두번째 파일 생성됨. 2로 바꾸고 거기에 코드 추가'''
-
 import random
+import winsound
+import sqlite3
+import datetime
+from tkinter import *
+import tkinter.ttk as ttk
 import time
 import sys
-######### 사운드 출력 필요 모듈
-import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
-import sqlite3
-import datetime    #'''게임 시간 기록에 필요한 패키지'''
 
-######### DB생성 & Autocommit
-# 본인 DB 파일 경로
-conn = sqlite3.connect('./resource/records.db', isolation_level=None)
+conn = sqlite3.connect('./resource/records.db',isolation_level=None)
 
-######### Cursor연결
 cursor = conn.cursor()
 
-######### 테이블 생성(Datatype : TEXT NUMERIC INTEGER REAL BLOB)
 cursor.execute(
     "CREATE TABLE IF NOT EXISTS records(id INTEGER PRIMARY KEY AUTOINCREMENT,\
 cor_cnt INTEGER, record text, regdate text)"
 )
 
-'''AUTOINCREMENT : 삽입할 때 insert해주지 않아도, 저절로 1씩 증가 또는 지정한 수로 증가\
-    cor_cnt:정답 개수, record : 결과 '''
-'''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
+root = Tk()
+root.title("단어 맞추기 게임")
+root.configure(bg='skyblue')
+root.geometry("800x600")
+
+label1=Label(root, text = "user : ",bg='skyblue')
+label1.grid(row=0,column=0)
+txt=Text(root, width=10,height=1)
+txt.grid(row=0,column=1)
+txt.insert(END,"")
+
+def change():
+    label1.config(text="등록 완료")
+    btn.config(state="disabled")
+    txt.config(state="disabled")
 
 
-############################# 추가 코드 ############################
-# GameStart 클래스 생성
+btn=Button(root,text="등록",command=change,bg='black',fg='white')
+btn.grid(row=0,column=2)
+btn.config(state="normal")
+
 class GameStart:
     def __init__(self, user):
         self.user = user
         
-    # 유저 입장 알림
     def user_info(self):
-        print("User : {}님이 입장하였습니다.".format(self.user))
-        print()
-#####################################################################3
+        label1.config(text="등록 완료")
+        btn.config(state="disabled")
+        txt.config(state="disabled")
 
 words = []                                   # 영어 단어 리스트(1000개 로드)
 
@@ -59,42 +65,51 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
-user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
-user=GameStart(user_name)                     #### GameStart의 user객체 생성
-user.user_info()                              #### user 입장 알림 메서드 호출
+user=GameStart(txt)                     #### GameStart의 user객체 생성
+#user.user_info()                            #### user 입장 알림 메서드 호출
+
+label_word=Label(root,text="단어", font = (150),bg='skyblue')
+label_word.place(x=350, y= 180)
+
+label_answer=Entry(root, font=(50), bg='white',justify='left')
+label_answer.place(x=300,y=350)
+label_answer.focus_set()
 
 start = time.time()                          # Start Time
 
 while n <= 5:                                # 5회 반복
+    
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    print("{}번 문제>>".format(n),q)         # 문제 출력
+    label_word["text"]=q
+
+    x=input("da")
     
-    x = input("타이핑 하세요>> ")            # 타이핑 입력
 
-    if str(q).strip() == str(x).strip():     # 입력 확인(공백제거)
-        ########### 정답 소리 재생
-        winsound.PlaySound(                  
-            './sound/good.wav',
-            winsound.SND_FILENAME   #'''winsound의 PlaySound라는 클래스로 지정'''
+    def startGame(event):
+        if label_answer.get()==label_word['text']:     # 입력 확인(공백제거)
+            ########### 정답 소리 재생
+            winsound.PlaySound(                  
+                './sound/good.wav',
+                winsound.SND_FILENAME   #'''winsound의 PlaySound라는 클래스로 지정'''
             #'''SND_FILENAME을 직접 넣었음'''
-        )
+            )
         ############
-        print(">>Pass!\n")
-        cor_cnt += 1                         # 정답 개수 카운트
+            cor_cnt += 1                         # 정답 개수 카운트
 
-    else:
-        ########### 오답 소리 재생
-        winsound.PlaySound(                  
-            './sound/bad.wav',
-            winsound.SND_FILENAME
-        )
-        ##################
+        else:
+            ########### 오답 소리 재생
+            winsound.PlaySound(                  
+                './sound/bad.wav',
+                winsound.SND_FILENAME
+            )
+            ##################
 
-        print(">>Wrong!\n")
-
-    n += 1                                   # 다음 문제 전환
+        n += 1                                   # 다음 문제 전환
+        random.shuffle(words)
+        label_word.configure(text=words[0])
+        label_answer.delete(0,END)
 
 end = time.time()                            # End Time
 et = end - start                             # 총 게임 시간
@@ -127,3 +142,16 @@ conn.close()
 
 # 수행 시간 출력
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
+
+label_time=Label(root, text="제한시간 : ",font=(100),bg='skyblue')
+label_time.place(x =550, y=80)
+
+label_score=Label(root, text="맞춘 개수 : ", font= (100),bg='skyblue')
+label_score.place(x=550,y=500)
+
+random.shuffle(words)
+label_word.configure(text=words[0])
+label_answer.delete(0,END)
+
+root.bind('<Return>',startGame)
+root.mainloop()
