@@ -64,8 +64,9 @@ user=GameStart(user_name)                     #### GameStart의 user객체 생�
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
+et = 1
 
-while n <= 5:                                # 5회 반복
+while (et>0):                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
@@ -101,8 +102,11 @@ while n <= 5:                                # 5회 반복
 
     n += 1                                   # 다음 문제 전환
 
-end = time.time()                            # End Time
-et = end - start                             # 총 게임 시간
+    end = time.time()
+    et = 20 - (end - start)  # 게임시간(타이머)
+
+#end = time.time()                            # End Time
+#et = end - start                             # 총 게임 시간
 
 et = format(et, ".3f")                       # 소수 셋째 자리 출력(시간)
 
