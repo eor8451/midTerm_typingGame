@@ -69,7 +69,12 @@ while n <= 5:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    print("{}번 문제>>".format(n),q)         # 문제 출력
+    k = list(q)
+    random.shuffle(k)
+    s = "".join(k)
+    print(q) #답
+
+    print("{}번 문제>>".format(n),s)         # 문제 출력
     
     x = input("타이핑 하세요>> ")            # 타이핑 입력
 
