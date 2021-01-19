@@ -10,6 +10,7 @@ import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
 import sqlite3
 import datetime    #'''게임 시간 기록에 필요한 패키지'''
 
+
 ######### DB생성 & Autocommit
 # 본인 DB 파일 경로
 conn = sqlite3.connect('./resource/records.db', isolation_level=None)
@@ -26,7 +27,6 @@ cor_cnt INTEGER, record text, regdate text)"
 '''AUTOINCREMENT : 삽입할 때 insert해주지 않아도, 저절로 1씩 증가 또는 지정한 수로 증가\
     cor_cnt:정답 개수, record : 결과 '''
 '''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
-
 
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
@@ -64,11 +64,19 @@ user=GameStart(user_name)                     #### GameStart의 user객체 생�
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
-et = 1
 
-while (et>0):                                # 5회 반복
+from threading import Thread
+def check():
+    time.sleep(10)
+    print('time out')
+    exit()
+
+Thread(target=check).start()
+
+while True:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
+
 
     k = list(q)
     random.shuffle(k)
@@ -102,11 +110,11 @@ while (et>0):                                # 5회 반복
 
     n += 1                                   # 다음 문제 전환
 
-    end = time.time()
-    et = 20 - (end - start)  # 게임시간(타이머)
+    #end = time.time()
+    #et = 20 - (end - start)  # 게임시간(타이머)
 
-#end = time.time()                            # End Time
-#et = end - start                             # 총 게임 시간
+end = time.time()                            # End Time
+et = end - start                             # 총 게임 시간
 
 et = format(et, ".3f")                       # 소수 셋째 자리 출력(시간)
 
