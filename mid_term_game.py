@@ -63,9 +63,32 @@ if words==[]:                                #파일이 없을때 프로그램 �
 # 단어 섞어주는 함수
 def randword(word):                           
     word_lis=list(word)
-    print(word)
+#    print(word)                            #! 정답확인
     random.shuffle(word_lis)
     return word_lis
+
+#최고점 함수
+def best(cor_cnt,user_name):
+    aboutUser=[]
+    try:
+        f=open('./resource/bestScore.txt', 'r',encoding='utf8')
+    except IOError:
+        print("파일이 없습니다!! 점수를 읽을 수 없습니다!!")
+    else:
+        aboutUser=(f.readlines())
+        name=aboutUser[0].strip()
+        score=int(aboutUser[1].strip())
+        f.close()
+
+    if cor_cnt>=score:
+        print("최고점 :",cor_cnt,"  ",user_name)
+        score_best=open('./resource/bestScore.txt', 'w',encoding='utf8')
+        score_best.write(user_name)
+        score_best.write("\n")
+        score_best.write(str(cor_cnt))
+        score_best.close()
+    else:
+        print("최고점 :",score,"  ",name)
 
 
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
@@ -136,23 +159,8 @@ cursor.execute(
 ######### 접속 해제
 conn.close()
 
-#최고점
-try:
-    f=open('./resource/bestScore.txt', 'r')
-except IOError:
-    print("파일이 없습니다!! 점수를 읽을 수 없습니다!!")
-
-score=int((f.read()).strip())
-f.close()
-
-if cor_cnt>score:
-    print("최고점 :",cor_cnt)
-    score_best=open('./resource/bestScore.txt', 'w')
-    score_best.write(str(cor_cnt))
-    score_best.close()
-else:
-    print("최고점 :",score)
-
+#최고점 함수 호출
+best(cor_cnt,user_name)
 
 # 수행 시간 출력
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
