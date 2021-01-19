@@ -59,6 +59,13 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
+def randword(word):                            #! 단어 섞어주는 함수
+    word_lis=list(word)
+    print(word)
+    random.shuffle(word_lis)
+    return word_lis
+
+
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
@@ -69,7 +76,9 @@ while n <= 5:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    print("{}번 문제>>".format(n),q)         # 문제 출력
+    word_ch=''.join(randword(q))                     #! 추가 - 함수호출
+
+    print("{}번 문제>>".format(n),word_ch)         #! 문제 출력
     
     x = input("타이핑 하세요>> ")            # 타이핑 입력
 
