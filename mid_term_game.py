@@ -3,30 +3,36 @@
 '''파일 목록에서 ctrl+c+v하면 두번째 파일 생성됨. 2로 바꾸고 거기에 코드 추가'''
 
 import random
-import time
+import tkinter
 import sys
 ######### 사운드 출력 필요 모듈
 import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
 import sqlite3
-import datetime    #'''게임 시간 기록에 필요한 패키지'''
+import time    #'''게임 시간 기록에 필요한 패키지'''
 
 ######### DB생성 & Autocommit
 # 본인 DB 파일 경로
-conn = sqlite3.connect('./resource/records.db', isolation_level=None)
+#conn = sqlite3.connect('./resource/records.db', isolation_level=None)
 
 ######### Cursor연결
-cursor = conn.cursor()
+#cursor = conn.cursor()
 
 ######### 테이블 생성(Datatype : TEXT NUMERIC INTEGER REAL BLOB)
-cursor.execute(
-    "CREATE TABLE IF NOT EXISTS records(id INTEGER PRIMARY KEY AUTOINCREMENT,\
-cor_cnt INTEGER, record text, regdate text)"
-)
+#cursor.execute(
+   # "CREATE TABLE IF NOT EXISTS records(id INTEGER PRIMARY KEY AUTOINCREMENT,\
+#cor_cnt INTEGER, record text, regdate text)"
+#)
 
 '''AUTOINCREMENT : 삽입할 때 insert해주지 않아도, 저절로 1씩 증가 또는 지정한 수로 증가\
     cor_cnt:정답 개수, record : 결과 '''
 '''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
 
+#종료 버튼 클릭시 게임 종료
+def click_exit():
+    pass
+
+def enter(event):
+   x = input_word.get()
 
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
@@ -59,19 +65,47 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
+
+
+
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
 
+#Root
+
+root = tkinter.Tk()
+root.title("영어 단어 맞추기")
+root.resizable(False,False)
+
+canvas = tkinter.Canvas(root, width=800, height=600)
+canvas.pack()
+
+book = tkinter.PhotoImage(file="block_word1.png")
+
+canvas.create_image(400,300,image=book)
+
+
+
+label = tkinter.Label(root, text="영어 단어",font=("System",80) )
+label.place(x=120,y=200)
+
+input_word = tkinter.Entry(root, font=("System",25),justify='center')
+input_word.place(x=200, y=480)
+ 
+
 while n <= 5:                                # 5회 반복
+                               
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    print("{}번 문제>>".format(n),q)         # 문제 출력
+    #print("{}번 문제>>".format(n),q)
+    label["text"]= q       # 문제 출력
     
-    x = input("타이핑 하세요>> ")            # 타이핑 입력
+    x= input("Dd")   # 타이핑 입력
+   
 
     if str(q).strip() == str(x).strip():     # 입력 확인(공백제거)
         ########### 정답 소리 재생
@@ -112,18 +146,18 @@ else:
 
 ######### 결과 기록 DB 삽입
     '''data삽입 전에 먼저 기록테이블 구조 열어보기'''
-cursor.execute(
+#cursor.execute(
     "INSERT INTO records('cor_cnt', 'record', 'regdate') VALUES (?, ?, ?)",
-    (
-        cor_cnt, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-    )
-)
+#    (
+#        cor_cnt, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+#    )
+#)
 '''ID는 오토 인크리먼트이므로 입력안해줘도 자동으로 db에서 연속된 숫자형으로 넣어줌'''
 '''strftime('%Y-%m-%d %H:%M:%S') : 포맷 변환'''
 
 '''게임 실행해서 db기록되는지 확인'''
 ######### 접속 해제
-conn.close()
+#conn.close()
 
 # 수행 시간 출력
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
