@@ -118,7 +118,9 @@ while n <= 5:                                # 5회 반복
     #print("{}번 문제>>".format(n),q)
     label["text"]= q       # 문제 출력
 
-    if str(q).strip() == str(x).strip():     # 입력 확인(공백제거)
+    y= input(x)
+
+    if str(q).strip() == str(y).strip():     # 입력 확인(공백제거)
         ########### 정답 소리 재생
         winsound.PlaySound(                  
             './sound/good.wav',
