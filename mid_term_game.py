@@ -10,6 +10,7 @@ import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
 import sqlite3
 import time    #'''게임 시간 기록에 필요한 패키지'''
 
+
 ######### DB생성 & Autocommit
 # 본인 DB 파일 경로
 #conn = sqlite3.connect('./resource/records.db', isolation_level=None)
@@ -27,6 +28,7 @@ import time    #'''게임 시간 기록에 필요한 패키지'''
     cor_cnt:정답 개수, record : 결과 '''
 '''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
 
+<<<<<<< HEAD
 #종료 버튼 클릭시 게임 종료
 def click_exit():
     pass
@@ -40,6 +42,8 @@ def click_word():
     print(x)
     input_word.delete(0,"end")
 
+=======
+>>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
 class GameStart:
@@ -72,12 +76,40 @@ if words==[]:                                #파일이 없을때 프로그램 �
 #print(words)                                 # 단어 리스트 확인
 
 
+<<<<<<< HEAD
+=======
+#최고점 함수
+def best(cor_cnt,user_name):
+    aboutUser=[]
+    try:
+        f=open('./resource/bestScore.txt', 'r',encoding='utf8')
+    except IOError:
+        print("파일이 없습니다!! 점수를 읽을 수 없습니다!!")
+    else:
+        aboutUser=(f.readlines())
+        name=aboutUser[0].strip()
+        score=int(aboutUser[1].strip())
+        f.close()
+
+    if cor_cnt>=score:
+        print("최고점 :",cor_cnt,"  ",user_name)
+        score_best=open('./resource/bestScore.txt', 'w',encoding='utf8')
+        score_best.write(user_name)
+        score_best.write("\n")
+        score_best.write(str(cor_cnt))
+        score_best.close()
+    else:
+        print("최고점 :",score,"  ",name)
+
+
+>>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
 
+<<<<<<< HEAD
 #Root
 
 root = tkinter.Tk()
@@ -109,6 +141,23 @@ while n <= 5:                                # 5회 반복
                                
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
+=======
+while True:                                # 5회 반복
+    random.shuffle(words)                    # List shuffle!
+    q = random.choice(words)                 # List -> words random extract!
+
+    remainTime = 10 -(int(time.time()-start))
+    if(remainTime<=0):
+        print('Game Over')
+        break
+
+    k = list(q)
+    random.shuffle(k)
+    s = "".join(k)
+    print(q) #답
+
+    print("{}번 문제>>".format(n),s)         # 문제 출력
+>>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
     
     #힌트버튼생성
     hint_btn=tkinter.Button(root,text="힌트 클릭",font=("System",15),justify='center',command=click_hint)
@@ -143,6 +192,7 @@ while n <= 5:                                # 5회 반복
 
     n += 1                                   # 다음 문제 전환
 
+
 end = time.time()                            # End Time
 et = end - start                             # 총 게임 시간
 
@@ -172,6 +222,9 @@ else:
 '''게임 실행해서 db기록되는지 확인'''
 ######### 접속 해제
 #conn.close()
+
+#최고점 함수 호출
+best(cor_cnt,user_name)
 
 # 수행 시간 출력
 
