@@ -103,7 +103,7 @@ input_word.place(x=200, y=480)
 
 #정답제출
 word_btn = tkinter.Button(root, text="제출",font=("System",15),command=click_word)
-word_btn.pack() 
+word_btn.place(x=230,y=500) 
 
 while n <= 5:                                # 5회 반복
                                
@@ -114,10 +114,9 @@ while n <= 5:                                # 5회 반복
     hint_btn=tkinter.Button(root,text="힌트 클릭",font=("System",15),justify='center',command=click_hint)
     hint_btn.place(x=350,y=400)
 
+
     #print("{}번 문제>>".format(n),q)
     label["text"]= q       # 문제 출력
-
-    x= input("타이핑")
 
     if str(q).strip() == str(x).strip():     # 입력 확인(공백제거)
         ########### 정답 소리 재생
