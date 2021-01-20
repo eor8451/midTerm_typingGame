@@ -92,7 +92,7 @@ def startGame(event):
         random.shuffle(words)
         label_word.configure(text=words[0])
         label_answer.delete(0,END)
-
+        
         if label_answer.get()==label_word['text']:     # 입력 확인(공백제거)
             ########### 정답 소리 재생
             winsound.PlaySound(                  
