@@ -28,7 +28,7 @@ import time    #'''게임 시간 기록에 필요한 패키지'''
     cor_cnt:정답 개수, record : 결과 '''
 '''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
 
-<<<<<<< HEAD
+
 #종료 버튼 클릭시 게임 종료
 def click_exit():
     pass
@@ -42,8 +42,6 @@ def click_word():
     print(x)
     input_word.delete(0,"end")
 
-=======
->>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
 class GameStart:
@@ -76,8 +74,7 @@ if words==[]:                                #파일이 없을때 프로그램 �
 #print(words)                                 # 단어 리스트 확인
 
 
-<<<<<<< HEAD
-=======
+
 #최고점 함수
 def best(cor_cnt,user_name):
     aboutUser=[]
@@ -102,14 +99,14 @@ def best(cor_cnt,user_name):
         print("최고점 :",score,"  ",name)
 
 
->>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
+
 user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
 
-<<<<<<< HEAD
+
 #Root
 
 root = tkinter.Tk()
@@ -135,13 +132,9 @@ input_word.place(x=200, y=480)
 
 #정답제출
 word_btn = tkinter.Button(root, text="제출",font=("System",15),command=click_word)
-word_btn.place(x=230,y=500) 
+word_btn.place(x=550,y=480) 
 
-while n <= 5:                                # 5회 반복
-                               
-    random.shuffle(words)                    # List shuffle!
-    q = random.choice(words)                 # List -> words random extract!
-=======
+
 while True:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
@@ -156,8 +149,7 @@ while True:                                # 5회 반복
     s = "".join(k)
     print(q) #답
 
-    print("{}번 문제>>".format(n),s)         # 문제 출력
->>>>>>> 5bde6a094ac90b6dd693bbb067a16ba067b647f2
+     # 문제 출력
     
     #힌트버튼생성
     hint_btn=tkinter.Button(root,text="힌트 클릭",font=("System",15),justify='center',command=click_hint)
@@ -165,7 +157,7 @@ while True:                                # 5회 반복
 
 
     #print("{}번 문제>>".format(n),q)
-    label["text"]= q       # 문제 출력
+    label["text"]= s      # 문제 출력
 
     y= input(x)
 
