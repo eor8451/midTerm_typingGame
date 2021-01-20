@@ -7,7 +7,14 @@ import tkinter.ttk as ttk
 import time
 import sys
 
+<<<<<<< HEAD
 conn = sqlite3.connect('./resource/records.db',isolation_level=None)
+=======
+
+######### DB생성 & Autocommit
+# 본인 DB 파일 경로
+conn = sqlite3.connect('./resource/records.db', isolation_level=None)
+>>>>>>> 52b680a76544367762543771e7306cfa88f024bb
 
 cursor = conn.cursor()
 
@@ -32,11 +39,16 @@ def change():
     btn.config(state="disabled")
     txt.config(state="disabled")
 
+<<<<<<< HEAD
 
 btn=Button(root,text="등록",command=change,bg='black',fg='white')
 btn.grid(row=0,column=2)
 btn.config(state="normal")
 
+=======
+############################# 추가 코드 ############################
+# GameStart 클래스 생성
+>>>>>>> 52b680a76544367762543771e7306cfa88f024bb
 class GameStart:
     def __init__(self, user):
         self.user = user
@@ -65,6 +77,7 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
+<<<<<<< HEAD
 user=GameStart(txt)                     #### GameStart의 user객체 생성
 #user.user_info()                            #### user 입장 알림 메서드 호출
 
@@ -93,6 +106,56 @@ while n <= 5:                                # 5회 반복
     label_answer.delete(0,END)
 
     def startGame(event):
+=======
+
+#최고점 함수
+def best(cor_cnt,user_name):
+    aboutUser=[]
+    try:
+        f=open('./resource/bestScore.txt', 'r',encoding='utf8')
+    except IOError:
+        print("파일이 없습니다!! 점수를 읽을 수 없습니다!!")
+    else:
+        aboutUser=(f.readlines())
+        name=aboutUser[0].strip()
+        score=int(aboutUser[1].strip())
+        f.close()
+
+    if cor_cnt>=score:
+        print("최고점 :",cor_cnt,"  ",user_name)
+        score_best=open('./resource/bestScore.txt', 'w',encoding='utf8')
+        score_best.write(user_name)
+        score_best.write("\n")
+        score_best.write(str(cor_cnt))
+        score_best.close()
+    else:
+        print("최고점 :",score,"  ",name)
+
+
+user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
+user=GameStart(user_name)                     #### GameStart의 user객체 생성
+user.user_info()                              #### user 입장 알림 메서드 호출
+
+start = time.time()                          # Start Time
+
+while True:                                # 5회 반복
+    random.shuffle(words)                    # List shuffle!
+    q = random.choice(words)                 # List -> words random extract!
+
+    remainTime = 10 -(int(time.time()-start))
+    if(remainTime<=0):
+        print('Game Over')
+        break
+
+    k = list(q)
+    random.shuffle(k)
+    s = "".join(k)
+    print(q) #답
+
+    print("{}번 문제>>".format(n),s)         # 문제 출력
+    
+    x = input("타이핑 하세요>> ")            # 타이핑 입력
+>>>>>>> 52b680a76544367762543771e7306cfa88f024bb
 
         if label_answer.get()==label_word['text']:     # 입력 확인(공백제거)
             ########### 정답 소리 재생
@@ -113,6 +176,7 @@ while n <= 5:                                # 5회 반복
             ##################
 
         n += 1                                   # 다음 문제 전환
+
 
 
 end = time.time()                            # End Time
@@ -143,6 +207,9 @@ cursor.execute(
 '''게임 실행해서 db기록되는지 확인'''
 ######### 접속 해제
 conn.close()
+
+#최고점 함수 호출
+best(cor_cnt,user_name)
 
 # 수행 시간 출력
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
