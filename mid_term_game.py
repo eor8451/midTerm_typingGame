@@ -65,18 +65,14 @@ user.user_info()                              #### user 입장 알림 메서드 
 
 start = time.time()                          # Start Time
 
-from threading import Thread
-def check():
-    time.sleep(10)
-    print('time out')
-    exit()
-
-Thread(target=check).start()
-
 while True:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
+    remainTime = 10 -(int(time.time()-start))
+    if(remainTime<=0):
+        print('Game Over')
+        break
 
     k = list(q)
     random.shuffle(k)
@@ -110,8 +106,6 @@ while True:                                # 5회 반복
 
     n += 1                                   # 다음 문제 전환
 
-    #end = time.time()
-    #et = 20 - (end - start)  # 게임시간(타이머)
 
 end = time.time()                            # End Time
 et = end - start                             # 총 게임 시간
