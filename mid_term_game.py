@@ -84,10 +84,16 @@ while n <= 5:                                # 5회 반복
 
     label_word["text"]=q
 
-    x=input("da")
-    
+    answer=Entry.get(label_answer)
+    label_answer.delete(0,END)
+    label_answer.insert(0,answer)
+
+    random.shuffle(words)
+    label_word.configure(text=words[0])
+    label_answer.delete(0,END)
 
     def startGame(event):
+
         if label_answer.get()==label_word['text']:     # 입력 확인(공백제거)
             ########### 정답 소리 재생
             winsound.PlaySound(                  
@@ -107,9 +113,7 @@ while n <= 5:                                # 5회 반복
             ##################
 
         n += 1                                   # 다음 문제 전환
-        random.shuffle(words)
-        label_word.configure(text=words[0])
-        label_answer.delete(0,END)
+
 
 end = time.time()                            # End Time
 et = end - start                             # 총 게임 시간

@@ -85,7 +85,9 @@ def startGame(event):
 
         label_word["text"]=q
 
-        x=input("")
+        answer=Entry.get(label_answer)
+        label_answer.delete(0,END)
+        label_answer.insert(0,answer)
 
         random.shuffle(words)
         label_word.configure(text=words[0])
@@ -111,7 +113,7 @@ def startGame(event):
 
         n += 1                                   # 다음 문제 전환
 
-
+'''
     end = time.time()                            # End Time
     et = end - start                             # 총 게임 시간
 
@@ -125,9 +127,10 @@ def startGame(event):
         print("결과 : 합격")
     else:
         print("불합격")
+'''
 
 ######### 결과 기록 DB 삽입
-    '''data삽입 전에 먼저 기록테이블 구조 열어보기'''
+'''data삽입 전에 먼저 기록테이블 구조 열어보기'''
 
 '''ID는 오토 인크리먼트이므로 입력안해줘도 자동으로 db에서 연속된 숫자형으로 넣어줌'''
 '''strftime('%Y-%m-%d %H:%M:%S') : 포맷 변환'''
