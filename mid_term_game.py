@@ -10,6 +10,7 @@ import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
 import sqlite3
 import datetime    #'''게임 시간 기록에 필요한 패키지'''
 
+
 ######### DB생성 & Autocommit
 # 본인 DB 파일 경로
 conn = sqlite3.connect('./resource/records.db', isolation_level=None)
@@ -26,7 +27,6 @@ cor_cnt INTEGER, record text, regdate text)"
 '''AUTOINCREMENT : 삽입할 때 insert해주지 않아도, 저절로 1씩 증가 또는 지정한 수로 증가\
     cor_cnt:정답 개수, record : 결과 '''
 '''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
-
 
 ############################# 추가 코드 ############################
 # GameStart 클래스 생성
@@ -60,13 +60,6 @@ if words==[]:                                #파일이 없을때 프로그램 �
 #print(words)                                 # 단어 리스트 확인
 
 
-# 단어 섞어주는 함수
-def randword(word):                           
-    word_lis=list(word)
-#    print(word)                            #! 정답확인
-    random.shuffle(word_lis)
-    return word_lis
-
 #최고점 함수
 def best(cor_cnt,user_name):
     aboutUser=[]
@@ -97,13 +90,21 @@ user.user_info()                              #### user 입장 알림 메서드 
 
 start = time.time()                          # Start Time
 
-while n <= 5:                                # 5회 반복
+while True:                                # 5회 반복
     random.shuffle(words)                    # List shuffle!
     q = random.choice(words)                 # List -> words random extract!
 
-    word_ch=''.join(randword(q))                     #! 함수호출
+    remainTime = 10 -(int(time.time()-start))
+    if(remainTime<=0):
+        print('Game Over')
+        break
 
-    print("{}번 문제>>".format(n),word_ch)         #! 문제 출력
+    k = list(q)
+    random.shuffle(k)
+    s = "".join(k)
+    print(q) #답
+
+    print("{}번 문제>>".format(n),s)         # 문제 출력
     
     x = input("타이핑 하세요>> ")            # 타이핑 입력
 
@@ -129,6 +130,7 @@ while n <= 5:                                # 5회 반복
         print(">>Wrong!\n")
 
     n += 1                                   # 다음 문제 전환
+
 
 end = time.time()                            # End Time
 et = end - start                             # 총 게임 시간
