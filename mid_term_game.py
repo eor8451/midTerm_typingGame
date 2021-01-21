@@ -79,13 +79,14 @@ def Timer():
         if(Retry == 'yes'):
 
             cor_cnt = 0
-            times = 30
+            times = 60
 
             user_name = pyautogui.prompt('name ', 'Whats your name? ')
             label_Tim.configure(text=times)
             label.configure(text="GameStart")
             label_score.configure(text=cor_cnt)
             n = 1
+            hint_btn["text"] = "힌트"
             user=GameStart(user_name)                     #### GameStart의 user객체 생성
             user.user_info()
 
