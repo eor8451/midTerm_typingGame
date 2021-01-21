@@ -7,27 +7,10 @@ import tkinter
 import sys
 ######### 사운드 출력 필요 모듈
 import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
-import sqlite3
 import time    #'''게임 시간 기록에 필요한 패키지'''
+from tkinter import messagebox
 
-
-######### DB생성 & Autocommit
-# 본인 DB 파일 경로
-#conn = sqlite3.connect('./resource/records.db', isolation_level=None)
-
-######### Cursor연결
-#cursor = conn.cursor()
-
-######### 테이블 생성(Datatype : TEXT NUMERIC INTEGER REAL BLOB)
-#cursor.execute(
-   # "CREATE TABLE IF NOT EXISTS records(id INTEGER PRIMARY KEY AUTOINCREMENT,\
-#cor_cnt INTEGER, record text, regdate text)"
-#)
-
-'''AUTOINCREMENT : 삽입할 때 insert해주지 않아도, 저절로 1씩 증가 또는 지정한 수로 증가\
-    cor_cnt:정답 개수, record : 결과 '''
-'''실행 했을 때 에러 발생하면 안됨. 데이터베이스 생성됐는지 확인'''
-
+import pyautogui
 
 #종료 버튼 클릭시 게임 종료
 def click_exit():
@@ -73,6 +56,29 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
+#타이머 함수
+
+def Timer():
+    global times,cor_cnt, user_name
+
+    if(times> 0):
+        times-=1
+
+    else:
+        best(cor_cnt,user_name)
+        Retry = messagebox.askquestion('게임 오버','게임을 재시작하시겠습니까?\n'+'이름 :  '+ user_name+'\n'+'점수 : ' + str(cor_cnt))
+        if(Retry == 'yes'):
+
+            cor_cnt = 0
+            times = 30
+
+            user_name = pyautogui.prompt('name ', 'Whats your name? ')
+            user=GameStart(user_name)                     #### GameStart의 user객체 생성
+            user.user_info()
+
+        else :
+            root.destroy()  
+
 
 
 #최고점 함수
@@ -100,11 +106,12 @@ def best(cor_cnt,user_name):
 
 
 
-user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
+user_name = pyautogui.prompt('name ', 'Whats your name? ')
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
+
 
 
 #Root
@@ -135,43 +142,26 @@ word_btn = tkinter.Button(root, text="제출",font=("System",15),command=click_w
 word_btn.place(x=550,y=480) 
 
 
-while True:                                # 5회 반복
-    random.shuffle(words)                    # List shuffle!
-    q = random.choice(words)                 # List -> words random extract!
+#게임 시작 함수
+def GamePlay(event):
+                            
+    global cor_cnt,q
 
     remainTime = 10 -(int(time.time()-start))
     if(remainTime<=0):
         print('Game Over')
-        break
 
-    k = list(q)
-    random.shuffle(k)
-    s = "".join(k)
-    print(q) #답
-
-     # 문제 출력
-    
-    #힌트버튼생성
-    hint_btn=tkinter.Button(root,text="힌트 클릭",font=("System",15),justify='center',command=click_hint)
-    hint_btn.place(x=350,y=400)
-
-
-    #print("{}번 문제>>".format(n),q)
-    label["text"]= s      # 문제 출력
-
-    y= input(x)
-
-    if str(q).strip() == str(y).strip():     # 입력 확인(공백제거)
-        ########### 정답 소리 재생
+    #print(q)
+    if(input_word.get()==words[0]):
         winsound.PlaySound(                  
             './sound/good.wav',
             winsound.SND_FILENAME   #'''winsound의 PlaySound라는 클래스로 지정'''
             #'''SND_FILENAME을 직접 넣었음'''
         )
-        ############
-        print(">>Pass!\n")
-        cor_cnt += 1                         # 정답 개수 카운트
-
+        print(input_word.get())
+        cor_cnt += 1
+        label_score.configure(text=cor_cnt)
+        print('score:',cor_cnt)
     else:
         ########### 오답 소리 재생
         winsound.PlaySound(                  
@@ -179,10 +169,16 @@ while True:                                # 5회 반복
             winsound.SND_FILENAME
         )
         ##################
-
         print(">>Wrong!\n")
-
-    n += 1                                   # 다음 문제 전환
+    
+    random.shuffle(words)                   # List shuffle!
+    q = words[0]
+    k = list(q)
+    random.shuffle(k)
+    s = "".join(k)
+    label.configure(text=s)
+    input_word.delete(0,"end")
+                              
 
 
 end = time.time()                            # End Time
@@ -194,32 +190,11 @@ print()
 print('--------------')
 
 
-if cor_cnt >= 3:                             # 3개 이상 합격
-    print("결과 : 합격")
-else:
-    print("불합격")
-
-
-######### 결과 기록 DB 삽입
-    '''data삽입 전에 먼저 기록테이블 구조 열어보기'''
-#cursor.execute(
-    "INSERT INTO records('cor_cnt', 'record', 'regdate') VALUES (?, ?, ?)",
-#    (
-#        cor_cnt, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-#    )
-#)
-'''ID는 오토 인크리먼트이므로 입력안해줘도 자동으로 db에서 연속된 숫자형으로 넣어줌'''
-'''strftime('%Y-%m-%d %H:%M:%S') : 포맷 변환'''
-
-'''게임 실행해서 db기록되는지 확인'''
-######### 접속 해제
-#conn.close()
 
 #최고점 함수 호출
 best(cor_cnt,user_name)
 
 # 수행 시간 출력
-
+root.bind('<Return>',GamePlay)
 root.mainloop()
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
-
