@@ -8,7 +8,9 @@ import sys
 ######### 사운드 출력 필요 모듈
 import winsound    #'''파이썬에 내장된 패키지<--소리 재생'''
 import time    #'''게임 시간 기록에 필요한 패키지'''
+from tkinter import messagebox
 
+import pyautogui
 
 #종료 버튼 클릭시 게임 종료
 def click_exit():
@@ -54,6 +56,29 @@ if words==[]:                                #파일이 없을때 프로그램 �
     sys.exit()
 #print(words)                                 # 단어 리스트 확인
 
+#타이머 함수
+
+def Timer():
+    global times,cor_cnt, user_name
+
+    if(times> 0):
+        times-=1
+
+    else:
+        best(cor_cnt,user_name)
+        Retry = messagebox.askquestion('게임 오버','게임을 재시작하시겠습니까?\n'+'이름 :  '+ user_name+'\n'+'점수 : ' + str(cor_cnt))
+        if(Retry == 'yes'):
+
+            cor_cnt = 0
+            times = 30
+
+            user_name = pyautogui.prompt('name ', 'Whats your name? ')
+            user=GameStart(user_name)                     #### GameStart의 user객체 생성
+            user.user_info()
+
+        else :
+            root.destroy()  
+
 
 
 #최고점 함수
@@ -81,11 +106,12 @@ def best(cor_cnt,user_name):
 
 
 
-user_name=input("Ready? Input Your name>> ")             # Enter Game Start! 
+user_name = pyautogui.prompt('name ', 'Whats your name? ')
 user=GameStart(user_name)                     #### GameStart의 user객체 생성
 user.user_info()                              #### user 입장 알림 메서드 호출
 
 start = time.time()                          # Start Time
+
 
 
 #Root
@@ -172,4 +198,3 @@ best(cor_cnt,user_name)
 root.bind('<Return>',GamePlay)
 root.mainloop()
 print("게임 시간 :", et, "초", "정답 개수 : {}".format(cor_cnt))
-
